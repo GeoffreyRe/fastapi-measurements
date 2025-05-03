@@ -1,0 +1,65 @@
+name: fastapi-measurements
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  backend:
+    container_name: fastapi-measurements-backend
+    build:
+      context: ..
+      dockerfile: docker/backend/Dockerfile
+    image: fastapi-measurements-backend:latest
+    networks:
+      - app-network
+    ports:
+      - 8000:8000
+    volumes:
+      - ../app:/app
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      TEST_DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db-test:5432/${DB_NAME}-test
+    depends_on:
+      db:
+        condition: service_healthy
+      db-test:
+        condition: service_healthy
+
+  db:
+    container_name: fastapi-measurements-db
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - app-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  db-test:
+    container_name: fastapi-measurements-db-test
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}-test
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
+    name: fastapi-measurements-postgres-data
