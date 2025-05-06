@@ -12,7 +12,7 @@ def read_all(db: Session = Depends(get_db)):
 
 @router.get("/{id}", response_model=Unit)
 def read_one(id: int, db: Session = Depends(get_db)):
-    m = crud.get_unit(db, id)
-    if not m:
+    unit = crud.get_unit(db, id)
+    if not unit:
         raise HTTPException(status_code=404, detail="Not found")
-    return m
+    return unit

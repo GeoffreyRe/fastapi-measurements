@@ -8,11 +8,11 @@ def create_measurement(db: Session, data: MeasurementCreate):
     unit = get_unit(db, data.unit_id)
     if not unit:
         raise HTTPException(status_code=404, detail="Unit not found")
-    m = Measurement(**data.dict())
-    db.add(m)
+    measurement = Measurement(**data.dict())
+    db.add(measurement)
     db.commit()
-    db.refresh(m)
-    return m
+    db.refresh(measurement)
+    return measurement
 
 def get_measurements(db: Session, skip=0, limit=100):
     return db.query(Measurement).offset(skip).limit(limit).all()
@@ -36,8 +36,8 @@ def update_measurement(db: Session, id: int, data: MeasurementUpdate):
     return record
 
 def delete_measurement(db: Session, id: int):
-    m = get_measurement(db, id)
-    if m:
-        db.delete(m)
+    measurement = get_measurement(db, id)
+    if measurement:
+        db.delete(measurement)
         db.commit()
-    return m
+    return measurement
