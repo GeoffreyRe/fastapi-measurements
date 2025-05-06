@@ -11,6 +11,14 @@ def test_get_measurements(client, setup_data):
     measurements = response.json()
     assert len(measurements) == 2
 
+def test_get_measurements_with_limit(client, setup_data):
+    response = client.get("/measurements", params={'limit': 1})
+    
+    assert response.status_code == 200
+
+    measurements = response.json()
+    assert len(measurements) == 1
+
 def test_get_measurement(db, client, setup_data):
     measurement = db.query(Measurement).first()
     response = client.get(f"/measurements/{measurement.id}")

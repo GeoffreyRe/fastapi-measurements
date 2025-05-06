@@ -11,8 +11,8 @@ def create(data: MeasurementCreate, db: Session = Depends(get_db)):
     return crud.create_measurement(db, data)
 
 @router.get("/", response_model=list[Measurement])
-def read_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return crud.get_measurements(db, skip, limit)
+def read_all(limit: int = 100, db: Session = Depends(get_db)):
+    return crud.get_measurements(db, limit)
 
 @router.get("/{id}", response_model=Measurement)
 def read_one(id: int, db: Session = Depends(get_db)):

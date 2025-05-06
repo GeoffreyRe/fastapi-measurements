@@ -14,8 +14,8 @@ def create_measurement(db: Session, data: MeasurementCreate):
     db.refresh(measurement)
     return measurement
 
-def get_measurements(db: Session, skip=0, limit=100):
-    return db.query(Measurement).offset(skip).limit(limit).all()
+def get_measurements(db: Session, limit=100):
+    return db.query(Measurement).limit(limit).all()
 
 def get_measurement(db: Session, id: int):
     return db.query(Measurement).filter(Measurement.id == id).first()
