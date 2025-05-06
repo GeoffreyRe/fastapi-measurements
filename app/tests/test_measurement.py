@@ -3,13 +3,14 @@ from app.models.unit import Unit
 from sqlalchemy import func
 
 # GET tests
-def test_get_measurements(client, setup_data):
+def test_get_measurements(db, client, setup_data):
+    db_measurements = db.query(Measurement).all()
     response = client.get("/measurements")
     
     assert response.status_code == 200
 
     measurements = response.json()
-    assert len(measurements) == 2
+    assert len(measurements) == len(db_measurements)
 
 def test_get_measurements_with_limit(client, setup_data):
     response = client.get("/measurements", params={'limit': 1})
