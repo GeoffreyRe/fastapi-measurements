@@ -35,11 +35,16 @@ def client(db):
 
 @pytest.fixture
 def setup_data(db):
-    db.add(unit.Unit(name="Grams"))
-    db.add(unit.Unit(name="Tons"))
+    grams = unit.Unit(name="Grams")
+    tons = unit.Unit(name="Tons")
+    db.add(grams)
+    db.add(tons)
     db.commit()
-    db.add(measurement.Measurement(co2_value=100, unit_id=1))
-    db.add(measurement.Measurement(co2_value=200, unit_id=1))
+    db.refresh(grams)
+    db.refresh(tons)
+    db.add(measurement.Measurement(co2_value=100, unit_id=grams.id))
+    db.add(measurement.Measurement(co2_value=200, unit_id=grams.id))
+    db.add(measurement.Measurement(co2_value=300, unit_id=tons.id))
     db.commit()
     yield
     db.query(measurement.Measurement).delete()

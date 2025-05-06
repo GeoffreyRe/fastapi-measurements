@@ -14,8 +14,15 @@ def create_measurement(db: Session, data: MeasurementCreate):
     db.refresh(measurement)
     return measurement
 
-def get_measurements(db: Session, limit=100):
-    return db.query(Measurement).limit(limit).all()
+def get_measurements(db: Session, limit=100, unit_id: int = None):
+    query = db.query(Measurement)
+    if unit_id is not None:
+        unit = get_unit(db, unit_id)
+        if not unit:
+            raise HTTPException(status_code=404, detail="Unit not found")
+        query = query.filter(Measurement.unit_id == unit.id)
+
+    return query.limit(limit).all()
 
 def get_measurement(db: Session, id: int):
     return db.query(Measurement).filter(Measurement.id == id).first()

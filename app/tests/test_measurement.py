@@ -20,6 +20,22 @@ def test_get_measurements_with_limit(client, setup_data):
     measurements = response.json()
     assert len(measurements) == 1
 
+def test_get_measurements_with_unit(db, client, setup_data):
+    unit_id = db.query(Unit).filter(Unit.name == 'Tons').first()
+    db_measurements = db.query(Measurement).filter(Measurement.unit_id == unit_id.id).all()
+    response = client.get("/measurements", params={'unit_id': unit_id.id})
+    
+    assert response.status_code == 200
+
+    measurements = response.json()
+    assert len(measurements) == len(db_measurements)
+
+def test_get_measurements_with_invalid_unit(db, client, setup_data):
+    unit_id = db.query(func.max(Unit.id)).scalar() + 1
+    response = client.get("/measurements", params={'unit_id': unit_id})
+    
+    assert response.status_code == 404
+
 def test_get_measurement(db, client, setup_data):
     measurement = db.query(Measurement).first()
     response = client.get(f"/measurements/{measurement.id}")
@@ -115,28 +131,24 @@ def test_delete_measurement(client, db, setup_data):
     inital_measurement_ids = db.query(Measurement).all()
     measurement_to_delete = inital_measurement_ids[0].id
 
-    assert len(inital_measurement_ids) == 2
-
     response = client.delete(f"/measurements/{measurement_to_delete}")
     
     after_measurement_ids = db.query(Measurement).all()
     deleted_measurement_id = db.query(Measurement).filter_by(id=measurement_to_delete).first()
 
     assert response.status_code == 204
-    assert len(after_measurement_ids) == 1
+    assert len(after_measurement_ids) == len(inital_measurement_ids) - 1
     assert deleted_measurement_id is None
 
-# DELETE TESTS
 def test_delete_measurement_unknown_id(client, db, setup_data):
     inital_measurement_ids = db.query(Measurement).all()
     measurement_id = db.query(func.max(Measurement.id)).scalar() + 1
 
-    assert len(inital_measurement_ids) == 2
 
     response = client.delete(f"/measurements/{measurement_id}")
     
     after_measurement_ids = db.query(Measurement).all()
 
     assert response.status_code == 404
-    assert len(after_measurement_ids) == 2
+    assert len(after_measurement_ids) == len(inital_measurement_ids)
 
