@@ -18,6 +18,8 @@ This project is an API developed using:
 - **PostgreSQL** for data persistence
 - Fully containerized with **Docker** and **docker-compose**
 
+This **API** allows interaction with **CO₂ measurements**. It enables clients to store the amount of **CO₂** recorded at a specific point in time, along with metadata such as the unit, data source, and optional description. This is useful for **tracking environmental data** over time and **analyzing trends** in carbon emissions.
+
 ## 🚀 Getting Started
 
 Follow these steps to run the project locally:
@@ -78,12 +80,39 @@ To run the tests with coverage report:
 docker exec -it fastapi-measurements-backend pytest --cov=app /app/tests/
 ```
 
+## 📦 Database Migrations
+
+This project uses [Alembic](https://alembic.sqlalchemy.org/) to manage database schema migrations.
+
+To generate and apply migrations manually:
+
+### 1. **Create a new revision:**
+
+   ```bash
+   docker exec -w /app -it fastapi-measurements-backend alembic revision --autogenerate -m "Your message"
+   ```
+
+### 2. **Apply the latest migrations:**
+
+   ```bash
+   docker exec -w /app -it fastapi-measurements-backend alembic upgrade head
+   ```
+
+### 3. **Rollback the latest migration:**
+
+   ```bash
+   docker exec -w /app -it fastapi-measurements-backend alembic downgrade -1
+   ```
+
+### 4. **Check the current revision:**
+
+   ```bash
+   docker exec -w /app -it fastapi-measurements-backend alembic current
+   ```
+
 ## 🔮 Next Steps
 
 Here are some ideas for future improvements to this project:
-
-- **Add migrations with Alembic**  
-  Implement database schema migrations using [Alembic](https://alembic.sqlalchemy.org/) for better control over schema changes.
 
 - **Improve test coverage and robustness**  
   - Add more test cases for edge scenarios (e.g., missing or invalid fields in requests)
@@ -91,7 +120,7 @@ Here are some ideas for future improvements to this project:
 
 - **Add authentication system**  
   Implement user authentication using OAuth2 with JWT tokens to secure endpoints.
-
+ 
 - **Enhance filtering capabilities on GET /measurements**  
   Add query parameters to filter measurements, such as:
   - Filter by `time` range (e.g., `?start=2024-01-01&end=2024-02-01`)
