@@ -124,7 +124,6 @@ Here are some ideas for future improvements to this project:
 - **Enhance filtering capabilities on GET /measurements**  
   Add query parameters to filter measurements, such as:
   - Filter by `time` range (e.g., `?start=2024-01-01&end=2024-02-01`)
-  - Filter by `unit_id` or other attributes
 
 ## 👤 Author
 
