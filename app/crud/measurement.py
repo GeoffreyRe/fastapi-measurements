@@ -29,7 +29,7 @@ def get_measurement(db: Session, id: int):
 
 def update_measurement(db: Session, id: int, data: MeasurementUpdate):
     data = data.dict(exclude_unset=True)
-    if data.get("unit_id"):
+    if "unit_id" in data:
         unit = get_unit(db, data["unit_id"])
         if not unit:
             raise HTTPException(status_code=404, detail="Unit not found")
