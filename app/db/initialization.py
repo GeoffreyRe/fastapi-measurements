@@ -2,6 +2,9 @@ from app.models.unit import Unit
 from sqlalchemy.orm import Session
 
 def _init_units(db: Session):
+    """
+    This function creates 2 units by default
+    """
     for unit_name in ["Grams", "Tons"]:
         existing = db.query(Unit).filter_by(name=unit_name).first()
         if not existing:

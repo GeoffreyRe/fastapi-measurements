@@ -17,6 +17,7 @@ class MeasurementUpdate(MeasurementBase):
     @model_validator(mode="before")
     @classmethod
     def check_unit_id_not_null(cls, data):
+        # if unit_id is given, it cannot be null
         if "unit_id" in data and data["unit_id"] is None:
             raise ValueError("unit_id cannot be null.")
         return data
