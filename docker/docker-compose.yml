@@ -20,6 +20,9 @@ services:
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
       TEST_DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db-test:5432/${DB_NAME}-test
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     depends_on:
       db:
         condition: service_healthy

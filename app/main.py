@@ -10,7 +10,6 @@ app.include_router(unit.router, prefix="/units", tags=["Units"])
 
 @app.on_event("startup")
 def startup_event():
-	Base.metadata.create_all(bind=engine)
 	db = SessionLocal()
 	try:
 		data_init(db)

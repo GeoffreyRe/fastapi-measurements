@@ -38,6 +38,9 @@ Inside the `/docker` folder, create a `.env` file with the following variables:
 DB_NAME=your_database_name
 DB_USER=your_database_user
 DB_PASSWORD=your_database_password
+ADMIN_USERNAME=your_admin_name
+ADMIN_PASSWORD=your_admin_password
+ADMIN_EMAIL=your_admin_password
 ```
 
 ### 3. Build and run the Docker containers

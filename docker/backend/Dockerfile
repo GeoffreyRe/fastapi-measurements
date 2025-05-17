@@ -13,6 +13,8 @@ RUN pip3 install -r /requirements.txt
 
 ENV PYTHONPATH=/
 
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--reload-dir", "app", "--host", "0.0.0.0"]
+CMD ["/entrypoint.sh"]
