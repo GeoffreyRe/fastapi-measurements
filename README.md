@@ -40,7 +40,7 @@ DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 ADMIN_USERNAME=your_admin_name
 ADMIN_PASSWORD=your_admin_password
-ADMIN_EMAIL=your_admin_password
+ADMIN_EMAIL=your_admin_email
 ```
 
 ### 3. Build and run the Docker containers
