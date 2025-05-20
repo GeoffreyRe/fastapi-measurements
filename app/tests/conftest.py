@@ -3,9 +3,11 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.db.database import Base, get_db
+from app.crud.auth import get_current_user
 from app.main import app
 from fastapi.testclient import TestClient
 from app.models import measurement, unit
+from app.db.initialization import _init_users
 
 SQLALCHEMY_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -29,7 +31,11 @@ def client(db):
         finally:
             pass
 
+    def override_get_current_user():
+        return db.Query(User).all()
+
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_current_user] = override_get_db
     with TestClient(app) as client:
         yield client
 
@@ -45,6 +51,7 @@ def setup_data(db):
     db.add(measurement.Measurement(co2_value=100, unit_id=grams.id))
     db.add(measurement.Measurement(co2_value=200, unit_id=grams.id))
     db.add(measurement.Measurement(co2_value=300, unit_id=tons.id))
+    _init_users(db)
     db.commit()
     yield
     db.query(measurement.Measurement).delete()
