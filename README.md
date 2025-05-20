@@ -35,6 +35,7 @@ git clone https://github.com/GeoffreyRe/fastapi-measurements.git
 Inside the `/docker` folder, create a `.env` file with the following variables:
 
 ```env
+SECRET_KEY=your_secret_key
 DB_NAME=your_database_name
 DB_USER=your_database_user
 DB_PASSWORD=your_database_password

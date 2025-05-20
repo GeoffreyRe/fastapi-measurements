@@ -35,7 +35,7 @@ def client(db):
         return db.Query(User).all()
 
     app.dependency_overrides[get_db] = override_get_db
-    app.dependency_overrides[get_current_user] = override_get_db
+    app.dependency_overrides[get_current_user] = override_get_current_user
     with TestClient(app) as client:
         yield client
 

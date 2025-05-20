@@ -3,8 +3,6 @@ from sqlalchemy.orm import Session
 from app.schemas.auth import AuthLoginOut
 from app.models import User
 from app.crud import auth as crud
-from app.crud.auth import get_current_user
-from app.models import User
 from app.db.database import get_db
 from typing import Annotated
 

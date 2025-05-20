@@ -4,7 +4,6 @@ from app.schemas.unit import Unit as Unit
 from app.models import User
 from app.crud import unit as crud
 from app.crud.auth import get_current_user
-from app.models import User
 from app.db.database import get_db
 
 router = APIRouter()
