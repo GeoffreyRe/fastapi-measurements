@@ -9,7 +9,7 @@ from app.db.database import get_db
 router = APIRouter()
 
 @router.post("/", response_model=Measurement, status_code=201)
-def create(data: MeasurementCreate, db: Session = Depends(get_db)):
+def create(data: MeasurementCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return crud.create_measurement(db, data)
 
 @router.get("/", response_model=list[Measurement])

@@ -1,17 +1,21 @@
 import pytest
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from app.db.database import Base, get_db
-from app.crud.auth import get_current_user
+from app.crud.auth import get_current_user, generate_jwt
 from app.main import app
 from fastapi.testclient import TestClient
-from app.models import measurement, unit
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException
+from app.models import measurement, unit, User
 from app.db.initialization import _init_users
+import jwt
 
 SQLALCHEMY_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 @pytest.fixture(scope="function")
 def db():
@@ -31,8 +35,14 @@ def client(db):
         finally:
             pass
 
-    def override_get_current_user():
-        return db.Query(User).all()
+    def override_get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(override_get_db)):
+        try:
+            data = jwt.decode(token, os.getenv('SECRET_KEY'), ['HS256'])
+            user = db.query(User).filter(User.id ==int(data.get("sub"))).first()
+        except Exception as e:
+            raise HTTPException(status_code=403, detail="Token invalid.")
+        
+        return user
 
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_current_user] = override_get_current_user
@@ -56,3 +66,15 @@ def setup_data(db):
     yield
     db.query(measurement.Measurement).delete()
     db.commit()
+
+@pytest.fixture
+def auth_token_header(db):
+    token = generate_jwt(
+        username=os.getenv("ADMIN_EMAIL"),
+        password=os.getenv("ADMIN_PASSWORD"),
+        db=db
+    )
+    headers = {
+        "Authorization": f"Bearer {token.access_token}"
+    }
+    return headers

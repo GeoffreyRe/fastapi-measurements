@@ -32,7 +32,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     try:
         data = jwt.decode(token, os.getenv('SECRET_KEY'), ['HS256'])
         user = db.query(User).filter(User.id ==int(data.get("sub"))).first()
-    except Exception:
+    except Exception as e:
         raise HTTPException(status_code=403, detail="Token invalid.")
     
     return user
