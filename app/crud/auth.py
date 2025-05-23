@@ -8,7 +8,7 @@ import jwt
 import datetime
 import os
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 def generate_jwt(username: str, password: str, db: Session):
     user = db.query(User).filter(User.email == username).first()

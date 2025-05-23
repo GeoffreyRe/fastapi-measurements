@@ -5,7 +5,7 @@ from sqlalchemy import func
 def test_get_units(client, setup_data, auth_token_header):
     headers = {}
     headers.update(auth_token_header)
-    response = client.get("/units", headers=headers)
+    response = client.get("api/units", headers=headers)
     
     assert response.status_code == 200
 
@@ -16,7 +16,7 @@ def test_get_unit(db, client, setup_data, auth_token_header):
     headers = {}
     headers.update(auth_token_header)
     unit = db.query(Unit).first()
-    response = client.get(f"/units/{unit.id}", headers=headers)
+    response = client.get(f"api/units/{unit.id}", headers=headers)
     
     assert response.status_code == 200
 
@@ -29,6 +29,6 @@ def test_get_unit_unknown_id(db, client, setup_data, auth_token_header):
     headers = {}
     headers.update(auth_token_header)
     unit_id = db.query(func.max(Unit.id)).scalar() + 1
-    response = client.get(f"/units/{unit_id}", headers=headers)
+    response = client.get(f"api/units/{unit_id}", headers=headers)
     
     assert response.status_code == 404

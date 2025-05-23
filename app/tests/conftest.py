@@ -15,7 +15,7 @@ import jwt
 SQLALCHEMY_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 @pytest.fixture(scope="function")
 def db():

@@ -13,8 +13,8 @@ services:
     image: fastapi-measurements-backend:latest
     networks:
       - app-network
-    ports:
-      - 8000:8000
+    expose:
+      - "8000"
     volumes:
       - ../app:/app
     environment:
@@ -66,6 +66,35 @@ services:
       timeout: 3s
       retries: 5
 
+  frontend:
+    container_name: fastapi-measurements-frontend
+    build:
+      context: ..
+      dockerfile: docker/frontend/Dockerfile
+    image: fastapi-measurements-frontend:latest
+    networks:
+      - app-network
+    expose:
+      - "3000"
+    volumes:
+      - ../frontend:/app
+      - node_modules:/app/node_modules
+
+  nginx:
+    image: nginx:latest
+    container_name: fastapi-measurements-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - app-network
+
 volumes:
   postgres_data:
     name: fastapi-measurements-postgres-data
+  node_modules:
+    name: fastapi-measurements-node-modules
