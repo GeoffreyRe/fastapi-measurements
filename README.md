@@ -60,15 +60,15 @@ This command will launch the web application.
 Once the containers are up and running, the API is available at:
 
 ```
-http://localhost:8000
+http://localhost/api
 ```
 
 ## 📚 API Documentation
 
 You can explore the automatically generated interactive documentation at:
 
-- Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
-- ReDoc: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+- Swagger UI: [http://localhost/api/docs](http://localhost/api/docs)
+- ReDoc: [http://localhost/api/redoc](http://localhost/api/redoc)
 
 ## 🧪 Running Tests
 
@@ -122,9 +122,6 @@ Here are some ideas for future improvements to this project:
   - Add more test cases for edge scenarios (e.g., missing or invalid fields in requests)
   - Test error responses and validation logic
 
-- **Add authentication system**  
-  Implement user authentication using OAuth2 with JWT tokens to secure endpoints.
- 
 - **Enhance filtering capabilities on GET /measurements**  
   Add query parameters to filter measurements, such as:
   - Filter by `time` range (e.g., `?start=2024-01-01&end=2024-02-01`)
